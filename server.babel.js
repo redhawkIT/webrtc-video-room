@@ -8,7 +8,7 @@ import favicon from 'serve-favicon';
 import compression from 'compression';
 
 const app = express(),
-  options = { 
+  options = {
     key: fs.readFileSync(__dirname + '/rtc-video-room-key.pem'),
     cert: fs.readFileSync(__dirname + '/rtc-video-room-cert.pem')
   },
@@ -55,9 +55,13 @@ io.sockets.on('connection', socket => {
     socket.broadcast.to(room).emit('approve', data);
   });
   socket.on('accept', id => {
-    io.sockets.connected[id].join(room);
-    // sending to all clients in 'game' room(channel), include sender
-    io.in(room).emit('bridge');
+    try {
+      io.sockets.connected[id].join(room);
+      // sending to all clients in 'game' room(channel), include sender
+      io.in(room).emit('bridge');
+    } catch(err) {
+      console.error('ERROR:', err)
+    }
   });
   socket.on('reject', () => socket.emit('full'));
   socket.on('leave', () => {
