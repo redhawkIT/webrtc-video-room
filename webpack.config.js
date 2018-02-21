@@ -9,15 +9,23 @@ module.exports = {
     filename: 'bundle.js'
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loaders: ['babel-loader', 'eslint-loader']
+        use: [{
+          loader: 'babel-loader'
+        }, {
+          loader: 'eslint-loader'
+        }]
       },
       {
         test: /\.css/,
-        loaders: ['style', 'css']
+        use: [{
+          loader: 'style-loader'
+        }, {
+          loader: 'css-loader'
+        }]
         // include: __dirname + '/src'
       }
     ]
